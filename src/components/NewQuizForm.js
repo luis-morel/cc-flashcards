@@ -3,14 +3,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import ROUTES from "../app/routes";
-// import selectors
+import { addQuiz, selectQuizzes } from "../features/quizzes/quizzesSlice.js";
+import { selectTopics } from "../features/topics/topicsSlice.js";
 
 export default function NewQuizForm() {
   const [name, setName] = useState("");
   const [cards, setCards] = useState([]);
   const [topicId, setTopicId] = useState("");
   const navigate = useNavigate();
-  const topics = {};  // Replace with topics 
+  const topics = useSelector(selectTopics);
   const dispatch = useDispatch();
 
   const handleSubmit = (e) => {
@@ -25,8 +26,15 @@ export default function NewQuizForm() {
     // create the new quiz here
 
     const quizId = uuidv4();
+    const newQuiz = {
+      id: quizId,
+      name,
+      topicId,
+      cardIds
+    };
 
-    // dispatch add quiz action 
+    // dispatch add quiz action
+    dispatch(addQuiz(newQuiz));
 
     navigate(ROUTES.quizzesRoute())
   };
